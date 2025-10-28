@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teachable Machine Demo</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Teachable Machine Image Model</h1>
+      <p>กดปุ่มด้านล่างเพื่อเริ่มใช้งานกล้องและทำนายผล</p>
+      <button id="startButton" onclick="init()">▶ เริ่มทำงาน</button>
+      <div id="webcam-container"></div>
+      <div id="label-container"></div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

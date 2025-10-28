@@ -1,0 +1,44 @@
+body {
+  font-family: "Kanit", sans-serif;
+  background: linear-gradient(180deg, #f0f4ff 0%, #e8edff 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  color: #2d3e8b;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #2d3e8b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+#label-container div {
+  margin: 4px 0;
+  font-weight: bold;
+  color: #444;
+}
