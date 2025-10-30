@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teachable Machine Demo</title>
     <link rel="stylesheet" href="style.css" />
-     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
-     <script src="script.js"></script>
   </head>
+
   <body>
     <div class="container">
-      <h1>AI สำหรับระเมินการดมยา</h1>
+      <h1>AI สำหรับประเมินการดมยา</h1>
       <p>กดปุ่มด้านล่างเพื่อเริ่มใช้งานและประเมินผล</p>
       <button id="startButton" onclick="init()">▶ เริ่มทำงาน</button>
       <div id="webcam-container"></div>
       <div id="label-container"></div>
     </div>
-    </body>
+
+    <!-- โหลด TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+
+    <!-- โหลด Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+
+    <!-- โหลดสคริปต์หลัก -->
+    <script src="script.js"></script>
+  </body>
 </html>
+
