@@ -1,28 +1,65 @@
 const URL = "./model/";
 let model, webcam, labelContainer, maxPredictions;
+let currentFacing = "environment"; // ค่าเริ่มต้น = กล้องหลัง
 
 async function init() {
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
+  // โหลดโมเดล
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
 
-  const flip = true;
+  // อ่านค่าที่เลือกจาก dropdown
+  const cameraSelect = document.getElementById("cameraSelect");
+  currentFacing = cameraSelect.value;
+
+  // ถ้ามี webcam เดิมอยู่ ให้ปิดก่อนเริ่มใหม่
+  if (webcam && webcam.stop) {
+    webcam.stop();
+  }
+
+  // flip เฉพาะตอนใช้กล้องหน้า
+  const flip = currentFacing === "user";
+
+  // สร้าง constraints สำหรับกล้องที่เลือก
+  const constraints = {
+    video: {
+      facingMode: { ideal: currentFacing },
+      width: 400,
+      height: 300,
+    },
+    audio: false,
+  };
+
+  // เริ่มกล้อง
   webcam = new tmImage.Webcam(400, 300, flip);
-  await webcam.setup();
+  await webcam.setup(constraints);
   await webcam.play();
   window.requestAnimationFrame(loop);
 
-  document.getElementById("webcam-container").appendChild(webcam.canvas);
+  // แสดงภาพกล้อง
+  const webcamContainer = document.getElementById("webcam-container");
+  webcamContainer.innerHTML = "";
+  webcamContainer.appendChild(webcam.canvas);
+
+  // สร้างพื้นที่ label
   labelContainer = document.getElementById("label-container");
   labelContainer.innerHTML = "";
   for (let i = 0; i < maxPredictions; i++) {
     labelContainer.appendChild(document.createElement("div"));
   }
 
-  document.getElementById("startButton").disabled = true;
-  document.getElementById("startButton").innerText = "กำลังทำงาน...";
+  // ปุ่มเปลี่ยนสถานะ
+  const startButton = document.getElementById("startButton");
+  startButton.innerText = "กำลังทำงาน...";
+  startButton.disabled = true;
+
+  // เมื่อกล้องพร้อมแล้วให้เปิดปุ่มกลับ
+  setTimeout(() => {
+    startButton.innerText = "เริ่มทำงานใหม่";
+    startButton.disabled = false;
+  }, 2000);
 }
 
 async function loop() {
