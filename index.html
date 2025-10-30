@@ -5,22 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI สำหรับประเมินการดมยา</title>
     <link rel="stylesheet" href="style.css" />
+
+    <!-- ฟอนต์สวย ๆ จาก Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet" />
   </head>
 
   <body>
     <div class="container">
-      <h1>AI สำหรับประเมินการดมยา</h1>
-      <p>เลือกกล้องที่ต้องการใช้งาน แล้วกดปุ่ม ▶ เริ่มทำงาน</p>
+      <h1>🤖 AI สำหรับประเมินการดมยา</h1>
+      <p>เลือกกล้องที่ต้องการ แล้วกดปุ่มด้านล่างเพื่อเริ่มใช้งาน</p>
 
       <div class="controls">
-        <label for="cameraSelect">เลือกกล้อง:</label>
         <select id="cameraSelect">
           <option value="user">📱 กล้องหน้า</option>
           <option value="environment">🎥 กล้องหลัง</option>
         </select>
-      </div>
 
-      <button id="startButton" onclick="init()">▶ เริ่มทำงาน</button>
+        <button id="startButton" onclick="init()">
+          <span class="icon">🎬</span>
+        </button>
+      </div>
 
       <div id="webcam-container"></div>
       <div id="label-container"></div>
