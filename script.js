@@ -1,6 +1,6 @@
 const URL = "./model/";
 let model, webcam, labelContainer, maxPredictions;
-let currentFacing = "environment"; // ค่าเริ่มต้น = กล้องหลัง
+let currentFacing = "environment"; // เริ่มจากกล้องหลัง
 
 async function init() {
   const modelURL = URL + "model.json";
@@ -10,16 +10,16 @@ async function init() {
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
 
-  // อ่านค่าที่เลือกจาก dropdown
+  // อ่านค่าจาก dropdown
   const cameraSelect = document.getElementById("cameraSelect");
   currentFacing = cameraSelect.value;
 
-  // ถ้ามี webcam เดิมอยู่ ให้ปิดก่อนเริ่มใหม่
+  // ถ้ามี webcam เดิมอยู่ให้ปิดก่อน
   if (webcam && webcam.stop) {
     webcam.stop();
   }
 
-  // flip เฉพาะตอนใช้กล้องหน้า
+  // flip เฉพาะตอนกล้องหน้า
   const flip = currentFacing === "user";
 
   // สร้าง constraints สำหรับกล้องที่เลือก
@@ -32,34 +32,33 @@ async function init() {
     audio: false,
   };
 
-  // เริ่มกล้อง
+  // ตั้งค่ากล้อง
   webcam = new tmImage.Webcam(400, 300, flip);
   await webcam.setup(constraints);
   await webcam.play();
   window.requestAnimationFrame(loop);
 
-  // แสดงภาพกล้อง
+  // แสดงผลบนหน้าเว็บ
   const webcamContainer = document.getElementById("webcam-container");
   webcamContainer.innerHTML = "";
   webcamContainer.appendChild(webcam.canvas);
 
-  // สร้างพื้นที่ label
+  // แสดงผล label
   labelContainer = document.getElementById("label-container");
   labelContainer.innerHTML = "";
   for (let i = 0; i < maxPredictions; i++) {
     labelContainer.appendChild(document.createElement("div"));
   }
 
-  // ปุ่มเปลี่ยนสถานะ
+  // ปิดปุ่มขณะเริ่ม
   const startButton = document.getElementById("startButton");
-  startButton.innerText = "กำลังทำงาน...";
   startButton.disabled = true;
+  startButton.innerHTML = "⏳";
 
-  // เมื่อกล้องพร้อมแล้วให้เปิดปุ่มกลับ
   setTimeout(() => {
-    startButton.innerText = "เริ่มทำงานใหม่";
     startButton.disabled = false;
-  }, 2000);
+    startButton.innerHTML = "🎬";
+  }, 1500);
 }
 
 async function loop() {
