@@ -10,8 +10,18 @@
   <body>
     <div class="container">
       <h1>AI สำหรับประเมินการดมยา</h1>
-      <p>กดปุ่มด้านล่างเพื่อเริ่มใช้งานและประเมินผล</p>
+      <p>เลือกกล้องที่ต้องการใช้งาน แล้วกดปุ่ม ▶ เริ่มทำงาน</p>
+
+      <div class="controls">
+        <label for="cameraSelect">เลือกกล้อง:</label>
+        <select id="cameraSelect">
+          <option value="user">📱 กล้องหน้า</option>
+          <option value="environment">🎥 กล้องหลัง</option>
+        </select>
+      </div>
+
       <button id="startButton" onclick="init()">▶ เริ่มทำงาน</button>
+
       <div id="webcam-container"></div>
       <div id="label-container"></div>
     </div>
@@ -19,10 +29,10 @@
     <!-- โหลด TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
 
-    <!-- โหลด Teachable Machine (เวอร์ชันใหม่สุดและชัดเจน) -->
+    <!-- โหลด Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
-    <!-- โหลดสคริปต์หลักของเรา -->
-    <script src="./script.js"></script>
+    <!-- สคริปต์หลัก -->
+    <script src="script.js"></script>
   </body>
 </html>
