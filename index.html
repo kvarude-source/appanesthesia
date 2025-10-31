@@ -3,40 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI ประเมินการดมยา</title>
+    <title>AI สำหรับประเมินการดมยา</title>
     <link rel="stylesheet" href="style.css" />
-
-    <!-- ฟอนต์สวย ๆ จาก Google -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet" />
   </head>
 
   <body>
     <div class="container">
-      <h1>🤖 AI ประเมินการดมยา</h1>
-      <p>กดปุ่มด้านล่างเพื่อเริ่มใช้งาน</p>
+      <h1>🤖 AI สำหรับประเมินการดมยา</h1>
+      <p>เลือกกล้องที่ต้องการ แล้วกดปุ่มด้านล่างเพื่อเริ่มใช้งาน</p>
 
       <div class="controls">
-        <select id="cameraSelect">
-          <option value="user">📱 กล้องหน้า</option>
-          <option value="environment">🎥 กล้องหลัง</option>
-        </select>
-
-        <button id="startButton" onclick="init()">
-          <span class="icon">🎬</span>
-        </button>
+        <!-- ✅ dropdown สำหรับเลือกกล้อง -->
+        <select id="cameraSelect" aria-label="เลือกกล้อง"></select>
+        <!-- ✅ ปุ่มเริ่มต้นใช้งาน -->
+        <button id="startButton" onclick="init()" title="Start camera">🎬</button>
       </div>
 
+      <!-- ✅ พื้นที่แสดงภาพกล้อง -->
       <div id="webcam-container"></div>
+
+      <!-- ✅ พื้นที่แสดงผลลัพธ์จากโมเดล -->
       <div id="label-container"></div>
     </div>
 
-    <!-- โหลด TensorFlow.js -->
+    <!-- ✅ โหลด TensorFlow + Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
-
-    <!-- โหลด Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
-    <!-- สคริปต์หลัก -->
+    <!-- ✅ สคริปต์ของเรา -->
     <script src="script.js"></script>
   </body>
 </html>
