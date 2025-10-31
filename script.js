@@ -7,10 +7,9 @@ async function loadCameraList() {
   select.innerHTML = "";
 
   try {
-    // ขอสิทธิ์ใช้กล้องเพื่อให้ browser แสดงชื่อกล้องจริง
     await navigator.mediaDevices.getUserMedia({ video: true });
   } catch (err) {
-    console.warn("⚠️ ยังไม่ได้อนุญาตกล้อง:", err);
+    console.warn("ยังไม่ได้อนุญาตกล้อง:", err);
     alert("กรุณาอนุญาตให้เว็บไซต์ใช้กล้อง แล้วรีเฟรชหน้าใหม่");
     return;
   }
@@ -39,13 +38,10 @@ async function loadCameraList() {
       select.appendChild(option);
     });
 
-    // ตั้งค่าเริ่มต้นให้เลือกกล้องหลัง (ถ้ามี)
     const defaultIndex = Array.from(select.options).findIndex(opt => opt.text.includes("หลัง"));
     select.selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
-
-    console.log("✅ พบกล้องทั้งหมด:", videoDevices.length);
   } catch (err) {
-    console.error("❌ โหลดรายชื่อกล้องล้มเหลว:", err);
+    console.error("โหลดรายชื่อกล้องล้มเหลว:", err);
   }
 }
 
@@ -65,18 +61,21 @@ async function init() {
     return;
   }
 
-  // ปิดกล้องเก่าถ้ามี
   if (webcam && webcam.stop) webcam.stop();
 
   const select = document.getElementById("cameraSelect");
   const selectedDeviceId = select.value;
   const selectedLabel = select.options[select.selectedIndex]?.text.toLowerCase() || "";
-  const flip = selectedLabel.includes("หน้า") || selectedLabel.includes("front");
 
-  // ตั้งค่า fallback
-  let constraints = { video: { facingMode: "environment" }, audio: false };
+  // ✅ flip เฉพาะกล้องหน้า เพื่อให้ตรงกับตอนเทรน
+  const flip = !(selectedLabel.includes("หลัง") || selectedLabel.includes("back") || selectedLabel.includes("environment"));
+
+  // ✅ เพิ่ม fallback สำหรับเบราว์เซอร์ที่ไม่รองรับ deviceId
+  let constraints;
   if (selectedDeviceId) {
     constraints = { video: { deviceId: { exact: selectedDeviceId } }, audio: false };
+  } else {
+    constraints = { video: { facingMode: "environment" }, audio: false };
   }
 
   try {
@@ -85,35 +84,30 @@ async function init() {
     await webcam.play();
     window.requestAnimationFrame(loop);
   } catch (err) {
-    console.error("⚠️ webcam.setup/play failed:", err);
+    console.error("webcam.setup/play failed:", err);
     alert("เปิดกล้องไม่สำเร็จ อาจเลือกกล้องที่ไม่รองรับ ลองเลือกตัวอื่นดูครับ");
     return;
   }
 
-  // แสดงภาพกล้อง
   const webcamContainer = document.getElementById("webcam-container");
   webcamContainer.innerHTML = "";
   webcamContainer.appendChild(webcam.canvas);
 
-  // เตรียม label
   labelContainer = document.getElementById("label-container");
   labelContainer.innerHTML = "";
   for (let i = 0; i < maxPredictions; i++) {
     labelContainer.appendChild(document.createElement("div"));
   }
 
-  // ปุ่มโหลด
   const startButton = document.getElementById("startButton");
   startButton.disabled = true;
-  startButton.innerText = "⏳ กำลังทำงาน...";
-
+  startButton.innerText = "⏳";
   setTimeout(() => {
     startButton.disabled = false;
     startButton.innerHTML = "🎬";
-  }, 1500);
+  }, 1000);
 }
 
-// loop ทำนายผล
 async function loop() {
   if (!webcam) return;
   webcam.update();
@@ -121,19 +115,13 @@ async function loop() {
   window.requestAnimationFrame(loop);
 }
 
-// ทำนายผลจากภาพกล้อง
 async function predict() {
   if (!model || !webcam) return;
   const prediction = await model.predict(webcam.canvas);
   for (let i = 0; i < maxPredictions; i++) {
-    const classPrediction =
-      prediction[i].className +
-      ": " +
-      (prediction[i].probability * 100).toFixed(2) +
-      "%";
+    const classPrediction = prediction[i].className + ": " + (prediction[i].probability * 100).toFixed(2) + "%";
     labelContainer.childNodes[i].innerHTML = classPrediction;
   }
 }
 
-// โหลดรายชื่อกล้องอัตโนมัติเมื่อหน้าเว็บเปิด
 window.addEventListener("load", loadCameraList);
