@@ -1,66 +1,75 @@
 const URL = "./model/";
 let model, webcam, labelContainer, maxPredictions;
-let currentFacing = "environment"; // เริ่มจากกล้องหลัง
+let videoDevices = []; // เก็บรายชื่อกล้องทั้งหมด
 
 async function init() {
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
   // โหลดโมเดล
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
+  if (!model) {
+    model = await tmImage.load(modelURL, metadataURL);
+    maxPredictions = model.getTotalClasses();
+  }
 
-  // อ่านค่าจาก dropdown
-  const cameraSelect = document.getElementById("cameraSelect");
-  currentFacing = cameraSelect.value;
-
-  // ถ้ามี webcam เดิมอยู่ให้ปิดก่อน
+  // ปิดกล้องเดิม (ถ้ามี)
   if (webcam && webcam.stop) {
     webcam.stop();
   }
 
-  // flip เฉพาะตอนกล้องหน้า
-  const flip = currentFacing === "user";
+  // อ่านค่าที่เลือกจาก dropdown
+  const cameraSelect = document.getElementById("cameraSelect");
+  const selectedDeviceId = cameraSelect.value;
 
-  // สร้าง constraints สำหรับกล้องที่เลือก
+  // flip ถ้าเป็นกล้องหน้า
+  const flip = (cameraSelect.options[cameraSelect.selectedIndex].text.includes("หน้า"));
+
   const constraints = {
     video: {
-      facingMode: { ideal: currentFacing },
+      deviceId: selectedDeviceId ? { exact: selectedDeviceId } : undefined,
       width: 400,
-      height: 300,
+      height: 300
     },
-    audio: false,
+    audio: false
   };
 
-  // ตั้งค่ากล้อง
+  // เริ่มต้น webcam ใหม่
   webcam = new tmImage.Webcam(400, 300, flip);
   await webcam.setup(constraints);
   await webcam.play();
   window.requestAnimationFrame(loop);
 
-  // แสดงผลบนหน้าเว็บ
+  // แสดงภาพบนหน้าเว็บ
   const webcamContainer = document.getElementById("webcam-container");
   webcamContainer.innerHTML = "";
   webcamContainer.appendChild(webcam.canvas);
 
-  // แสดงผล label
+  // แสดง label
   labelContainer = document.getElementById("label-container");
   labelContainer.innerHTML = "";
   for (let i = 0; i < maxPredictions; i++) {
     labelContainer.appendChild(document.createElement("div"));
   }
-
-  // ปิดปุ่มขณะเริ่ม
-  const startButton = document.getElementById("startButton");
-  startButton.disabled = true;
-  startButton.innerHTML = "⏳";
-
-  setTimeout(() => {
-    startButton.disabled = false;
-    startButton.innerHTML = "🎬";
-  }, 1500);
 }
 
+// โหลดรายชื่อกล้อง
+async function loadCameraList() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  videoDevices = devices.filter(device => device.kind === "videoinput");
+
+  const select = document.getElementById("cameraSelect");
+  select.innerHTML = "";
+
+  videoDevices.forEach((device, index) => {
+    const option = document.createElement("option");
+    option.value = device.deviceId;
+    option.text =
+      device.label || `กล้อง ${index + 1}`;
+    select.appendChild(option);
+  });
+}
+
+// ทำนายผล
 async function loop() {
   webcam.update();
   await predict();
@@ -75,3 +84,6 @@ async function predict() {
     labelContainer.childNodes[i].innerHTML = classPrediction;
   }
 }
+
+// โหลดรายการกล้องทันทีเมื่อหน้าเว็บพร้อม
+window.addEventListener("load", loadCameraList);
