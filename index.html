@@ -3,35 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ช่วยประเมินการใส่ท่อช่วยหายใจ (Airway Assessment)</title>
+    <title>AI ประเมินทางเดินหายใจ (Airway Assessment)</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>🤖 AI ช่วยประเมินการใส่ท่อช่วยหายใจ</h1>
+        <h1>🤖 AI ประเมินทางเดินหายใจ</h1>
         <p class="subtitle">ระบบช่วยประเมินสภาพก่อนการใส่ท่อช่วยหายใจ</p>
 
         <div class="controls-card">
             <div class="input-group">
-                <label for="cameraSelect">เลือกกล้อง:</label>
-                <select id="cameraSelect" aria-label="เลือกกล้อง"></select>
+                <label for="cameraFacing">เลือกกล้อง:</label>
+                <select id="cameraFacing">
+                    <option value="environment">กล้องหลัง (ใช้ส่องผู้ป่วย)</option>
+                    <option value="user">กล้องหน้า (เซลฟี่)</option>
+                </select>
             </div>
-            <button id="startButton" onclick="init()">เริ่มประเมิน 🎬</button>
+            
+            <div class="button-group">
+                <button id="startButton" onclick="init()">เริ่มประเมิน 🎬</button>
+                <button id="saveButton" onclick="saveResult()" disabled>บันทึกผล 💾</button>
+            </div>
         </div>
 
         <div class="display-section">
+            <div id="risk-alert" class="alert-banner" style="display: none;">
+                ⚠️ แจ้งเตือน: พบแนวโน้มใส่ท่อช่วยหายใจยาก!
+            </div>
+
             <div id="webcam-container">
                 <p id="placeholder-text">ภาพจากกล้องจะแสดงที่นี่</p>
             </div>
             <div id="label-container" class="results-card">
                 </div>
         </div>
+
+        <div class="history-section">
+            <h3>📋 ประวัติการประเมิน</h3>
+            <ul id="history-list">
+                <li class="empty-history">ยังไม่มีข้อมูลการบันทึก</li>
+            </ul>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
-    
     <script src="script.js"></script>
 </body>
 </html>
