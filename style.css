@@ -1,5 +1,7 @@
 :root {
     --primary-color: #007bff;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
     --bg-color: #f4f7f6;
     --card-bg: #ffffff;
     --text-color: #333333;
@@ -61,27 +63,50 @@ select {
     font-size: 16px;
 }
 
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
 button {
+    flex: 1;
     background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 12px 20px;
-    font-size: 18px;
+    padding: 12px 10px;
+    font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
     font-family: 'Kanit', sans-serif;
     font-weight: 600;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, opacity 0.3s;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
+button:hover { background-color: #0056b3; }
+button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+#saveButton { background-color: var(--success-color); }
+#saveButton:hover:not(:disabled) { background-color: #218838; }
 
 .display-section {
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+.alert-banner {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
 }
 
 #webcam-container {
@@ -117,8 +142,46 @@ button:hover {
     padding-bottom: 8px;
     border-bottom: 1px solid #eee;
 }
-.results-card div:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+.results-card div:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.history-section {
+    margin-top: 30px;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: left;
+}
+
+.history-section h3 {
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+#history-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    background: #f8f9fa;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-color);
+    font-size: 15px;
+}
+
+#history-list li.risk-item {
+    border-left: 5px solid var(--danger-color);
+    background: #fff3f3;
+}
+
+.empty-history {
+    color: #999;
+    text-align: center;
+    background: none !important;
+    border-left: none !important;
 }
